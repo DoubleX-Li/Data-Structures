@@ -1,12 +1,10 @@
+//Author: Double X Li
+//Date: 2014-11-27 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "Stack.h"
-
-typedef struct Post_Elem
-{
-	Tree ptr;
-	int tag;
-}Elem;
+#include "Stack_Post.h"
 
 int zero = 0, one = 0, two = 0;
 
@@ -103,31 +101,32 @@ int Post(Tree T)
 
 int Post_NonRec(Tree T)
 {
-	Stack S;
+	Stack_Post S;
 	Tree p = T;
 	Elem elem;
-	InitStack(&S);
-	while(NULL != p || !IsEmpty(S))
+	InitStack_Post(&S);
+
+	while(NULL != p || !IsEmpty_Post(S))
 	{
 		while(NULL != p)
 		{
 			elem.ptr = p;
-			elem.tag = 1;
-			Push(&S,elem);
-			p = p->lchild;
+			elem.tag = 1; 
+			Push_Post(&S,elem); 
+			p = p -> lchild;
 		}
-		Pop(&S,&elem);
-		if( 1 == elem.tag)
+		Pop_Post(&S,&elem);
+		if(1 == elem.tag)
 		{
-			elem.tag == 2;
-			Push(&S,elem);
-			p = elem.ptr->rchild;
+			elem.tag = 2;
+			Push_Post(&S,elem); 
+			p = elem.ptr -> rchild;
 		}
 		else if(2 == elem.tag)
 		{
 			p = elem.ptr;
-			printf("%c ",p->key);
-			p = NULL;
+			printf("%c ", p->key);
+			p = NULL; 
 		}
 	}
 	return 0;
@@ -169,21 +168,30 @@ int main()
 	Tree T;
 	int height;
 	system("color F0");
+	
 	Creat(&T);
+	
 	printf("Pre:\n");
 	Pre(T);
-	printf("\n\nPre_NonRec:\n");
+	printf("\nPre_NonRec:\n");
 	Pre_NonRec(T);
+	
 	printf("\n\nMid:\n");
 	Mid(T);
-	printf("\n\nMid_NonRec:\n");
+	printf("\nMid_NonRec:\n");
 	Mid_NonRec(T);
+	
 	printf("\n\nPost:\n");
 	Post(T);
+	printf("\nPost_NonRec:\n");
+	Post_NonRec(T);
+	
 	printf("\n\n各类结点个数:\n");
 	CountDegree(T);
 	printf("zero = %d  one = %d  two = %d\n",zero, one, two);
+	
 	height = GetHeight(T);
 	printf("\n深度:\nHeight = %d\n", height);
+	
 	return 0;
 }
