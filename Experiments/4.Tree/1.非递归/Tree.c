@@ -1,19 +1,18 @@
 //Author: Double X Li
-//2014-11-26
- 
+//Date: 2014-11-27 
+
 #include <stdio.h>
 #include <stdlib.h>
-#define ElemType char
 
-int zero = 0, one = 0, two = 0;
- 
 typedef struct TNode
 {
-	ElemType key;
+	char key;
 	struct TNode *lchild, *rchild;
 }TNode, *Tree;
 
-void Creat(Tree *T)
+int zero = 0, one = 0, two = 0;
+
+int Creat(Tree *T)
 {
 	char c;
 	c = getchar();
@@ -25,22 +24,24 @@ void Creat(Tree *T)
 	{
 		*T = (TNode *)malloc(sizeof(TNode));
 		(*T)->key = c;
-		Creat(&(*T)->lchild);
-		Creat(&(*T)->rchild);
+		Creat(&((*T)->lchild));
+		Creat(&((*T)->rchild));
 	}
+	return 0;
 }
 
-void Pre(Tree T)
+int Pre(Tree T)
 {
 	if(NULL != T)
 	{
-		printf("%c ", T->key);
+		printf("%c ",T->key);
 		Pre(T->lchild);
 		Pre(T->rchild);
 	}
+	return 0;
 }
 
-void Mid(Tree T)
+int Mid(Tree T)
 {
 	if(NULL != T)
 	{
@@ -48,45 +49,49 @@ void Mid(Tree T)
 		printf("%c ",T->key);
 		Mid(T->rchild);
 	}
+	return 0;
 }
 
-void Post(Tree T)
+int Post(Tree T)
 {
 	if(NULL != T)
 	{
 		Post(T->lchild);
 		Post(T->rchild);
-		printf("%c ", T->key);
+		printf("%c ",T->key);
 	}
+	return 0;
 }
 
-void CountDegree(Tree T)
+int CountDegree(Tree T)
 {
 	if(NULL != T)
 	{
+		CountDegree(T->lchild);
+		CountDegree(T->rchild);
+		
 		if(T->lchild != NULL && T->rchild != NULL)
 			two++;
-		else if(T->lchild != NULL || T->rchild)
+		else if(T->lchild != NULL || T->rchild != NULL)
 			one++;
 		else
 			zero++;
-		
-		CountDegree(T->lchild);
-		CountDegree(T->rchild);
 	}
+	return 0;
 }
 
 int GetHeight(Tree T)
 {
 	int left, right;
-	if(T == NULL)
-		return 0;
-	left = GetHeight(T->lchild);
-	right = GetHeight(T->rchild);
-	if(left > right)
-		return left + 1;
-	else
-		return right + 1;
+	if(NULL != T)
+	{
+		left = GetHeight(T->lchild);
+		right = GetHeight(T->rchild);
+		if(left > right)
+			return left + 1;
+		else
+			return right + 1;
+	}
 }
 
 int main()
@@ -94,16 +99,24 @@ int main()
 	Tree T;
 	int height;
 	system("color F0");
+	
 	Creat(&T);
+	
 	printf("Pre:\n");
 	Pre(T);
+
 	printf("\n\nMid:\n");
 	Mid(T);
+	
 	printf("\n\nPost:\n");
 	Post(T);
+	
+	printf("\n\n各类结点个数:\n");
 	CountDegree(T);
-	printf("\n\nzero = %d  one = %d  two = %d\n",zero, one, two);
+	
+	printf("zero = %d  one = %d  two = %d\n",zero, one, two);
 	height = GetHeight(T);
-	printf("\nHeight = %d\n",height);
+	printf("\n深度:\nHeight = %d\n", height);
+	
 	return 0;
 }
