@@ -6,14 +6,14 @@
 #define ElemType int
 using namespace std;
 
-//½á¹¹Ìå¡ª¡ªÈıÔª 
+//ç»“æ„ä½“â€”â€”ä¸‰å…ƒ 
 typedef struct
 {
-	int row, column;
-	ElemType value;
+    int row, column;
+    ElemType value;
 }Three;
 
-//½á¹¹Ìå¡ª¡ªÈıÔª×é¼°Ïà¹ØĞÅÏ¢ 
+//ç»“æ„ä½“â€”â€”ä¸‰å…ƒç»„åŠç›¸å…³ä¿¡æ¯ 
 typedef struct
 {
     Three data[500];
@@ -22,7 +22,7 @@ typedef struct
     int valn;
 }Matrix;
 
-//³õÊ¼»¯ 
+//åˆå§‹åŒ– 
 int InitMatrix(Matrix &M)
 {
     M.rown = 0;
@@ -38,45 +38,45 @@ int InitMatrix(Matrix &M)
     return 0;
 }
 
-//´´½¨Ï¡Êè¾ØÕó 
+//åˆ›å»ºç¨€ç–çŸ©é˜µ 
 int CreatMatrix(Matrix &M)
 {
-    cout << "ÇëÊäÈë¾ØÕóµÄĞĞÊıÁĞÊıÒÔ¼°·ÇÁãÔªµÄ¸öÊı(a b c)£º";
+    cout << "è¯·è¾“å…¥çŸ©é˜µçš„è¡Œæ•°åˆ—æ•°ä»¥åŠéé›¶å…ƒçš„ä¸ªæ•°(a b c)ï¼š";
     cin >> M.rown >> M.coln >> M.valn;
     for(int i = 0; i < M.valn; i++)
     {
-        cout << "ÇëÊäÈëµÚ" << i + 1 << "¸ö·ÇÁãÔªµÄĞĞ¡¢ÁĞ¡¢Öµ(a b c)£º";
+        cout << "è¯·è¾“å…¥ç¬¬" << i + 1 << "ä¸ªéé›¶å…ƒçš„è¡Œã€åˆ—ã€å€¼(a b c)ï¼š";
         cin >> M.data[i].row >> M.data[i].column >> M.data[i].value;
     }
     return 0;
 }
 
-//´òÓ¡Ï¡Êè¾ØÕó 
+//æ‰“å°ç¨€ç–çŸ©é˜µ 
 int ShowMatrix(Matrix M)
 {
     int temp = 0;
     
-	for(int k = 0; k < M.valn; k++)
+    for(int k = 0; k < M.valn; k++)
     {
         for(int i = 0; i < M.rown; i++)
         {
-        	for(int j = 0; j < M.coln; j++)
+            for(int j = 0; j < M.coln; j++)
+            {
+                if(i == M.data[k].row && j == M.data[k].column)
         	{
-        		if(i == M.data[k].row && j == M.data[k].column)
-        		{
-        			cout <<  setw(4) << M.data[k++].value;
-				}
-				else
-					cout << setw(4) << temp;
-			}
-			cout << endl;
+        		cout <<  setw(4) << M.data[k++].value;
 		}
+		else
+			cout << setw(4) << temp;
+	    }
+	    cout << endl;
+	}
     }
     cout << endl;
     return 0;
 }
 
-//º¯ÊıÖØÔØ¡ª¡ªÏà¼Ó¾ØÕóÖÃÓÚC 
+//å‡½æ•°é‡è½½â€”â€”ç›¸åŠ çŸ©é˜µç½®äºC 
 int AddMatrix(Matrix A, Matrix B, Matrix &C)
 {
     int i = 0, j = 0;
@@ -155,7 +155,7 @@ int AddMatrix(Matrix A, Matrix B, Matrix &C)
     return 0;
 }
 
-//º¯ÊıÖØÔØ¡ª¡ªÏà¼Ó¾ØÕóÖÃÓÚA 
+//å‡½æ•°é‡è½½â€”â€”ç›¸åŠ çŸ©é˜µç½®äºA 
 int AddMatrix(Matrix &A, Matrix B)
 {
 	int i = 0, j = 0;
@@ -185,12 +185,12 @@ int AddMatrix(Matrix &A, Matrix B)
                 	A.data[n].row = A.data[n - 1].row;
                 	A.data[n].column = A.data[n - 1].column;
                 	A.data[n].value = A.data[n - 1].value;
-				}
-				A.data[i].row = B.data[j].row;
-				A.data[i].column = B.data[j].column;
-				A.data[i].value = B.data[j].value;
-				j++;
-				A.valn++;
+		}
+		A.data[i].row = B.data[j].row;
+		A.data[i].column = B.data[j].column;
+		A.data[i].value = B.data[j].value;
+		j++;
+		A.valn++;
             }
         }
         if(A.data[i].row > B.data[j].row)
@@ -200,12 +200,12 @@ int AddMatrix(Matrix &A, Matrix B)
                 A.data[n].row = A.data[n - 1].row;
                 A.data[n].column = A.data[n - 1].column;
                 A.data[n].value = A.data[n - 1].value;
-			}
-			A.data[i].row = B.data[j].row;
-			A.data[i].column = B.data[j].column;
-			A.data[i].value = B.data[j].value;
-			j++;
-			A.valn++;
+	    }
+	    A.data[i].row = B.data[j].row;
+	    A.data[i].column = B.data[j].column;
+	    A.data[i].value = B.data[j].value;
+	    j++;
+	    A.valn++;
         }
     }
     if(i == A.valn)
@@ -230,7 +230,7 @@ int main()
 {
     Matrix A,B,C;
 	
-	system("color F0");
+    system("color F0");
 	
     InitMatrix(A);
     InitMatrix(B);
@@ -239,19 +239,19 @@ int main()
     CreatMatrix(A);
     CreatMatrix(B);
 	
-	cout << "¾ØÕóA£º" << endl;
-	ShowMatrix(A);
-	cout << "¾ØÕóB£º" << endl;
-	ShowMatrix(B);
+    cout << "çŸ©é˜µAï¼š" << endl;
+    ShowMatrix(A);
+    cout << "çŸ©é˜µBï¼š" << endl;
+    ShowMatrix(B);
 	
     AddMatrix(A,B,C);
-    cout << "ºÍÖÃÓÚ¾ØÕóC£º" << endl;
+    cout << "å’Œç½®äºçŸ©é˜µCï¼š" << endl;
     ShowMatrix(C);
     
     AddMatrix(A,B);
-    cout << "ºÍÖÃÓÚ¾ØÕóA£º" << endl;
+    cout << "å’Œç½®äºçŸ©é˜µAï¼š" << endl;
     ShowMatrix(A);
     
-    cout << "¸ĞĞ»Ê¹ÓÃÏ¡Êè¾ØÕóÏà¼Ó³ÌĞò£¡" << endl;
+    cout << "æ„Ÿè°¢ä½¿ç”¨ç¨€ç–çŸ©é˜µç›¸åŠ ç¨‹åºï¼" << endl;
     return 0;
 }
