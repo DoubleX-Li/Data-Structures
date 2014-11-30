@@ -111,12 +111,12 @@ int main()
 	printf("\n\nPost:\n");
 	Post(T);
 	
-	printf("\n\n¸÷Àà½áµã¸öÊı:\n");
+	printf("\n\nå„ç±»èŠ‚ç‚¹æ•°:\n");
 	CountDegree(T);
 	
 	printf("zero = %d  one = %d  two = %d\n",zero, one, two);
 	height = GetHeight(T);
-	printf("\nÉî¶È:\nHeight = %d\n", height);
+	printf("\né«˜åº¦:\nHeight = %d\n", height);
 	
 	return 0;
 }
