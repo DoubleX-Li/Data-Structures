@@ -186,12 +186,12 @@ int main()
 	printf("\nPost_NonRec:\n");
 	Post_NonRec(T);
 	
-	printf("\n\n各类结点个数:\n");
+	printf("\n\n鍚勭被鑺傜偣:\n");
 	CountDegree(T);
 	printf("zero = %d  one = %d  two = %d\n",zero, one, two);
 	
 	height = GetHeight(T);
-	printf("\n深度:\nHeight = %d\n", height);
+	printf("\n楂樺害:\nHeight = %d\n", height);
 	
 	return 0;
 }
