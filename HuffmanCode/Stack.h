@@ -3,6 +3,7 @@
 typedef struct TNode
 {
 	int key;
+	char value; 
 	struct TNode *lchild, *rchild;
 }TNode, *Tree;
 

@@ -5,10 +5,12 @@
 #include <stdlib.h>
 #include "Stack.h"
 
-void Init(Tree *t, int x)
+FILE *fp;
+void Init(Tree *t, int x, char y)
 {
 	*t = (TNode *)malloc(sizeof(TNode));
 	(*t)->key = x;
+	(*t)->value = y;
 	(*t)->lchild = NULL;
 	(*t)->rchild = NULL;
 }
@@ -29,15 +31,29 @@ void Print(Tree T, int n)
 	Print(T->rchild,n+1);
 	for(i = 0; i < n; i++)
 		printf("    ");
-	printf("%3d\n",T->key);
+	printf("%4d\n",T->key);
 	Print(T->lchild,n+1);
+}
+
+void Pre(Tree T)
+{
+	if(T != NULL)
+	{
+		printf("%4d %4c\n",T->key,T->value);
+		fwrite(T,1,sizeof(Tree),fp);
+		Pre(T->lchild);
+		Pre(T->rchild);
+	}
 }
 
 int main()
 {
-	int i;
+	int i,j,temp;
 	int flag = 1;
-	int str[20] = {19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0};
+	char c;
+	int weight[27] = {186,64,13,22,32,103,21,15,47,57,1,5,32,20,57,63,15,1,48,51,80,23,8,18,1,16,1};
+	char ch[27] = {' ','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+	int n = 27;
 	Stack S, K;
 	Tree x;
 	Tree one, two;
@@ -45,11 +61,28 @@ int main()
 	
 	InitStack(&S);
 	InitStack(&K);
-	for(i = 0; i < 20; i++)
+	
+	for(i = 0;i < n; i++)
 	{
-		Init(&x,str[i]);
+		for(j = 1; j < n - i; j++)
+		{
+			if(weight[j-1] < weight[j])
+			{
+				temp = weight[j];
+				c = ch[j];
+				weight[j] = weight[j-1];
+				ch[j] = ch[j-1];
+				weight[j-1] = temp;
+				ch[j-1] = c;
+			}
+		}
+	}
+	for(i = 0; i < 27; i++)
+	{
+		Init(&x,weight[i],ch[i]);
 		Push(&S,x);
 	}
+
 	while(flag)
 	{
 		Pop(&S, &one);
@@ -84,5 +117,9 @@ int main()
 	}
 	printf("\n\n");
 	Print(temp1,1);
+	printf("\n\n");
+	fp = fopen("data",'w');
+	Pre(temp1);
+	fclose(fp);
 	return 0;
 }
