@@ -40,7 +40,7 @@ void Pre(Tree T)
 	if(T != NULL)
 	{
 		printf("%4d %4c\n",T->key,T->value);
-		fwrite(T,1,sizeof(Tree),fp);
+		fwrite(T,sizeof(Tree),1,fp);
 		Pre(T->lchild);
 		Pre(T->rchild);
 	}
