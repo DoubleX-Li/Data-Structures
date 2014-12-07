@@ -157,7 +157,8 @@ int main(void)
 {
 	//以课本中的无向图G13和有向图G14为测试用例
 	AdjMatrix G13_M, G14_M;
-
+	
+	system("color F0");
 	InitQueue_sq(&Q);
 	printf("=====创建书上的无向图G13的邻接矩阵=====\n");
 	G13_M = CreateGraph_Matrix(UNDIGRA);
@@ -174,6 +175,6 @@ int main(void)
 
 	printf("=====G13基于邻接矩阵得到的广度优先搜索遍历序列(从顶点1开始)=====\n");
 	BFSTraverse_Matrix(G13_M);
-	system("pause");
+	system("pause"); 
 	return 0;
 }
