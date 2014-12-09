@@ -42,7 +42,7 @@ void InsertionSort(int array[], int n)
 			j--;
 		}
 		array[j + 1] = temp;
-		printf("No.%d:          ",++x);
+		printf("No.%2d:          ",++x);
 		Show(array,10);
 	}
 	
@@ -71,7 +71,7 @@ void SelectionSort(int array[],int n)
 			array[i] = array[min];
 			array[min] = temp;
 		}
-		printf("No.%d:          ",++x);
+		printf("No.%2d:          ",++x);
 		Show(array, 10);
 	}
 }
@@ -104,18 +104,52 @@ void QuickSort(int array[], int left, int right)
 		}
 	}
 	array[p] = pivot;
-	printf("No.%d:          ",++x);
+	printf("No.%2d:          ",++x);
 	Show(array, 10);
 	if(p - left > 1)
 		QuickSort(array, left, p - 1);
 	if(right - p > 1)
 		QuickSort(array, p + 1, right);
-	
+}
+
+void MergeArray(int a[], int first, int mid, int last, int temp[])
+{
+	int i = first, j = mid + 1;
+	int m = mid, n = last;
+	int k = 0;
+	while(i <= m && j <= n )
+	{
+		if (a[i] < a[j] )
+			temp[k++] = a[i++];
+		else
+			temp[k++] = a[j++];
+	}
+	while(i <= m)
+		temp[k++] = a[i++];
+	while(j <= n)
+		temp[k++] = a[j++];
+	for (i = 0; i < k; i++)
+		a[first+i] = temp[i];
+}
+
+void MergeSort(int a[], int first, int last, int temp[])
+{
+	static int x = 0;
+	if (first < last)
+	{
+		int mid = (first + last) / 2;
+		MergeSort(a, first, mid, temp);
+		MergeSort(a, mid+1, last, temp);
+		MergeArray(a, first, mid, last, temp);
+	}
+	printf("No.%2d:          ",++x);
+	Show(temp, 10);
 }
 
 int main()
 {
 	int array[10];
+	int temp[10] = {0};
 	
 	InitArray(array);
 	printf("Origin:        ");
@@ -131,5 +165,9 @@ int main()
 	printf("\nQuickSort\n");
 	QuickSort(array, 0, 9);
 	
+	InitArray(array);
+	printf("\nMergeSort\n");
+	MergeSort(array, 0 , 9, temp);
+
 	return 0;
 }

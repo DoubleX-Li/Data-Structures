@@ -2,8 +2,9 @@
 
 typedef struct TNode
 {
-	int key;
-	char value; 
+	int weight;
+	char ch;
+	char code[20];
 	struct TNode *lchild, *rchild;
 }TNode, *Tree;
 
