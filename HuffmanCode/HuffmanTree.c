@@ -29,6 +29,30 @@ void Make(Tree one, Tree two, Tree *temp1)
 	(*temp1)->rchild = two;
 }
 
+void ReadTree(Tree *T)
+{
+	printf("first\n");
+	*T = (TNode *)malloc(sizeof(TNode));
+	fread(&(*T),sizeof(TNode),1,fp);
+	printf("second\n");
+	if((*T) != NULL)
+	{
+		printf("%d\n",(*T)->weight);
+		ReadTree(&((*T)->lchild));
+		ReadTree(&((*T)->rchild));
+	}
+}
+
+void SaveTree(Tree T)
+{
+	if(T != NULL)
+	{
+		fwrite(&T,sizeof(TNode),1,fp);
+		SaveTree(T->lchild);
+		SaveTree(T->rchild);
+	}	
+}
+
 Tree Init()
 {
 	int i,j,temp;
@@ -131,6 +155,9 @@ Tree Init()
 		if(temp1->weight == 1000)
 			flag = 0;
 	}
+	fp = fopen("hfmTree.txt","w");
+	SaveTree(temp1);
+	fclose(fp);
 	printf("³õÊ¼»¯Íê±Ï£¡\n");
 	return temp1;
 }
@@ -173,7 +200,14 @@ Tree Encoding(Tree T)
 	int i = 0;
 	char str[30];
 	
+	if(T == NULL)
+	{
+		fp = fopen("hfmTree.txt","r");
+		ReadTree(&T);
+		fclose(fp);
+	}
 	T = HuffmanCoding(T);
+
 	printf("\n");
 	if((fp = fopen("ToBeTran.txt","r")) != NULL)
 	{
@@ -317,7 +351,7 @@ void PrintTree(Tree T, int n)
 int main(void)
 {
 	int x;
-	Tree T;
+	Tree T = NULL;
 	
 	system("color F0");
 	Begin:
