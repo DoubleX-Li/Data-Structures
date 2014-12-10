@@ -11,6 +11,14 @@ FILE *fp;
 char save[27][15];
 char codestr[500];
 
+int IsLeaf(Tree T)
+{
+	if(T->lchild == NULL && T->rchild == NULL)
+		return 1;
+	else
+		return 0;
+}
+ 
 void InitNode(Tree *t, int x, char y)
 {
 	*t = (TNode *)malloc(sizeof(TNode));
@@ -31,13 +39,12 @@ void Make(Tree one, Tree two, Tree *temp1)
 
 void ReadTree(Tree *T)
 {
-	printf("first\n");
+	int flag;
 	*T = (TNode *)malloc(sizeof(TNode));
-	fread(&(*T),sizeof(TNode),1,fp);
-	printf("second\n");
-	if((*T) != NULL)
+	fscanf(fp,"%c %d %d\n",&((*T)->ch), &((*T)->weight), &flag);
+	
+	if(!flag)
 	{
-		printf("%d\n",(*T)->weight);
 		ReadTree(&((*T)->lchild));
 		ReadTree(&((*T)->rchild));
 	}
@@ -45,9 +52,9 @@ void ReadTree(Tree *T)
 
 void SaveTree(Tree T)
 {
-	if(T != NULL)
+	fprintf(fp,"%c %d %d\n",T->ch, T->weight, IsLeaf(T));
+	if(!IsLeaf(T))
 	{
-		fwrite(&T,sizeof(TNode),1,fp);
 		SaveTree(T->lchild);
 		SaveTree(T->rchild);
 	}	
@@ -73,8 +80,7 @@ Tree Init()
 	{
 		for(i = 0; i < n; i++)
 		{
-			fread(&ch[i],sizeof(char),1,fp);
-			fread(&weight[i],sizeof(int),1,fp);
+			fscanf(fp,"%c %d\n",&ch[i],&weight[i]);
 		}
 		fclose(fp);
 	}
@@ -83,7 +89,8 @@ Tree Init()
 		for(i = 0; i < n; i++)
 		{
 			printf("请输入第%d个字母:\n",i + 1);
-			ch[i] = getchar();
+			if(( ch[i] = getchar() ) == ' ')
+				ch[i] = '*';
 			getchar();
 			printf("及它的权值:\n");
 			scanf("%d",&weight[i]);
@@ -92,8 +99,7 @@ Tree Init()
 		fp = fopen("character.txt","w");
 		for(i = 0; i < n; i++)
 		{
-			fwrite(&ch[i],sizeof(char),1,fp);
-			fwrite(&weight[i],sizeof(int),1,fp);
+			fprintf(fp,"%c %d\n",ch[i],weight[i]); 
 		}
 		fclose(fp);
 	}
@@ -166,14 +172,14 @@ Tree HuffmanCoding(Tree T)
 {
 	if(NULL != T)
 	{
-		if(T->lchild == NULL && T->rchild == NULL)
+		if(IsLeaf(T))
 		{
 			printf("%c:%4d   %s\n",T->ch,T->weight,T->code);
 			if(isalpha(T->ch))
 			{
 				strcpy(save[(int)(T->ch - 64)],T->code);
 			}
-			else if(' ' == T->ch)
+			else if('*' == T->ch)
 			{
 				strcpy(save[0],T->code);
 			}
@@ -206,6 +212,7 @@ Tree Encoding(Tree T)
 		ReadTree(&T);
 		fclose(fp);
 	}
+	printf("进行哈夫曼编码\n");
 	T = HuffmanCoding(T);
 
 	printf("\n");
@@ -227,7 +234,7 @@ Tree Encoding(Tree T)
 	{
 		if(isalpha(str[i]))
 		{
-			printf("%c %s\n",str[i], save[(int)(str[i] - 64)]);
+			//printf("%c %s\n",str[i], save[(int)(str[i] - 64)]);
 			if(i == 0)
 				strcpy(codestr,save[(int)(str[i] - 64)]);
 			else
@@ -235,7 +242,7 @@ Tree Encoding(Tree T)
 		}
 		else if(' ' == str[i])
 		{
-			printf("  %s\n",save[0]);
+			//printf("  %s\n",save[0]);
 			if(i == 0)
 				strcpy(codestr,save[0]);
 			else
@@ -261,7 +268,7 @@ void Decoding(Tree T)
 	char ch;
 	Tree temp = T;
 	FILE *fq;
-	
+
 	fq = fopen("TextFile.txt","w");
 	
 	if((fp = fopen("CodeFile.txt","r")) == NULL)
@@ -274,7 +281,7 @@ void Decoding(Tree T)
 	{
 		while(1)
 		{
-			while(temp->lchild != NULL && temp->rchild != NULL)
+			while(!IsLeaf(temp))
 			{
 				if((ch = fgetc(fp)) == EOF)
 				{
@@ -289,7 +296,8 @@ void Decoding(Tree T)
 				if(ch == '1')
 					temp = temp->rchild;
 			}
-			
+			if(temp->ch == '*')
+				temp->ch = ' ';
 			printf("%c",temp->ch);
 			fprintf(fq,"%c",temp->ch);
 			temp = T;
@@ -333,10 +341,10 @@ void PrintTree(Tree T, int n)
 		printf("%4d\n",T->weight);
 		fprintf(fp,"%4d\n",T->weight);
 	}	
-	else if(T->ch == '*')
+	else if(T->ch == ' ')
 	{
-		printf("%4c\n",' ');
-		fprintf(fp,"%4c\n",' ');
+		printf("%4c\n",'*');
+		fprintf(fp,"%4c\n",'*');
 	}
 	else
 	{
@@ -364,7 +372,7 @@ int main(void)
 	printf("4.打印哈夫曼树\n");
 	printf("5.退出哈夫曼编码程序\n");
 	printf("~~~~~~~~~~~~~~~~~~~~~~~~\n");
-	printf("请输入序号选择功能：\n");
+	printf("请输入序号选择功能:");
 	scanf("%d",&x);
 	getchar();
 	switch(x)
