@@ -4,11 +4,11 @@ typedef struct TNode
 {
 	int weight;
 	char ch;
-	char code[20];
+	char code[20];//每个结点自带一个字符数组存储当前结点的哈夫曼编码 
 	struct TNode *lchild, *rchild;
 }TNode, *Tree;
 
-typedef struct                    //定义结构体 
+typedef struct
 {
 	Tree data[MAX];
 	int top;

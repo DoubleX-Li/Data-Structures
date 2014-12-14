@@ -1,5 +1,5 @@
 //Author: Double X Li
-//Date: 2014-12-8
+//Date: 2014-12-9
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,9 +8,10 @@
 #include "Stack.h"
 
 FILE *fp;
-char save[27][15];
-char codestr[500];
+char save[27][15];//储存27个字符的哈夫曼编码 
+char codestr[500];//储存编码后的报文 
 
+//判断是否为叶子 
 int IsLeaf(Tree T)
 {
 	if(T->lchild == NULL && T->rchild == NULL)
@@ -19,6 +20,7 @@ int IsLeaf(Tree T)
 		return 0;
 }
  
+//初始化树结点 
 void InitNode(Tree *t, int x, char y)
 {
 	*t = (TNode *)malloc(sizeof(TNode));
@@ -28,6 +30,7 @@ void InitNode(Tree *t, int x, char y)
 	(*t)->rchild = NULL;
 }
 
+//合并树 
 void Make(Tree one, Tree two, Tree *temp1)
 {
 	(*temp1) = (TNode *)malloc(sizeof(TNode));
@@ -37,6 +40,7 @@ void Make(Tree one, Tree two, Tree *temp1)
 	(*temp1)->rchild = two;
 }
 
+//从文件中读取树 
 void ReadTree(Tree *T)
 {
 	int flag;
@@ -50,6 +54,7 @@ void ReadTree(Tree *T)
 	}
 }
 
+//将树保存到文件中 
 void SaveTree(Tree T)
 {
 	fprintf(fp,"%c %d %d\n",T->ch, T->weight, IsLeaf(T));
@@ -60,6 +65,7 @@ void SaveTree(Tree T)
 	}	
 }
 
+//初始化 
 Tree Init()
 {
 	int i,j,temp;
@@ -73,10 +79,11 @@ Tree Init()
 	Tree one, two;
 	Tree temp1, temp2;
 	
+	//准备好两个栈 
 	InitStack(&S);
 	InitStack(&K);
 	
-	if((fp = fopen("character.txt","r")) != NULL)//有则读入 
+	if((fp = fopen("character.txt","r")) != NULL)//有字符集则读入 
 	{
 		for(i = 0; i < n; i++)
 		{
@@ -128,11 +135,13 @@ Tree Init()
 		Push(&S,x);
 	}
 	
-	//按照定义构造哈夫曼树 
+	//构造哈夫曼树 
 	while(flag)
 	{
+		//去最小的两个权值 
 		Pop(&S, &one);
 		Pop(&S,&two);
+		//构造一颗新树 
 		Make(one, two, &temp1);
 		if(IsEmpty(S))
 			break;
@@ -170,8 +179,10 @@ Tree Init()
 
 Tree HuffmanCoding(Tree T)
 {
+	//遍历哈夫曼树的过程中进行编码 
 	if(NULL != T)
 	{
+		//当前为叶子——需编码的字符所在结点 
 		if(IsLeaf(T))
 		{
 			printf("%c:%4d   %s\n",T->ch,T->weight,T->code);
@@ -185,12 +196,13 @@ Tree HuffmanCoding(Tree T)
 			}
 			
 		}
-		if(T->lchild)
+		//当前为非叶子 
+		if(T->lchild)//左孩子编码添加0 
         {
             strcpy(T->lchild->code,T->code);
             strcat(T->lchild->code,"0");
     	}
-        if(T->rchild)
+        if(T->rchild)//右孩子编码添加1 
         {
             strcpy(T->rchild->code,T->code);
             strcat(T->rchild->code,"1");
@@ -201,10 +213,11 @@ Tree HuffmanCoding(Tree T)
 	return T;
 }
 
+//编码 
 Tree Encoding(Tree T)
 {
 	int i = 0;
-	char str[30];
+	char str[MAX];
 	
 	if(T == NULL)
 	{
@@ -214,11 +227,11 @@ Tree Encoding(Tree T)
 	}
 	printf("进行哈夫曼编码\n");
 	T = HuffmanCoding(T);
-
+ 	//读入报文 
 	printf("\n");
 	if((fp = fopen("ToBeTran.txt","r")) != NULL)
 	{
-		fgets(str,30,fp);
+		fgets(str,MAX,fp);
 		fclose(fp);
 	}
 	else
@@ -229,12 +242,11 @@ Tree Encoding(Tree T)
 		fprintf(fp,"%s",str);
 		fclose(fp);
 	}
-	
+	//逐个字符查找对应编码并存入codestr 
 	while(str[i] != '\0')
 	{
 		if(isalpha(str[i]))
 		{
-			//printf("%c %s\n",str[i], save[(int)(str[i] - 64)]);
 			if(i == 0)
 				strcpy(codestr,save[(int)(str[i] - 64)]);
 			else
@@ -242,7 +254,6 @@ Tree Encoding(Tree T)
 		}
 		else if(' ' == str[i])
 		{
-			//printf("  %s\n",save[0]);
 			if(i == 0)
 				strcpy(codestr,save[0]);
 			else
@@ -263,6 +274,7 @@ Tree Encoding(Tree T)
 	return T;
 }
 
+//译码 
 void Decoding(Tree T)
 {
 	char ch;
@@ -270,7 +282,7 @@ void Decoding(Tree T)
 	FILE *fq;
 
 	fq = fopen("TextFile.txt","w");
-	
+	//读入编码，通过哈夫曼树译码 
 	if((fp = fopen("CodeFile.txt","r")) == NULL)
 	{
 		printf("无法译码！\n");
@@ -305,6 +317,7 @@ void Decoding(Tree T)
 	}
 }
 
+//按格式打印编码并保存 
 void PrintCode()
 {
 	int i;
@@ -325,6 +338,7 @@ void PrintCode()
 	printf("\n\n打印编码完毕！\n");
 }
 
+//按树形打印哈夫曼树并保存 
 void PrintTree(Tree T, int n)
 {
 	int i;
@@ -353,8 +367,6 @@ void PrintTree(Tree T, int n)
 	}
 	PrintTree(T->lchild,n+1);
 }
-
-
 
 int main(void)
 {
@@ -391,7 +403,7 @@ int main(void)
 				goto Begin;//进行哈夫曼译码 
 		case 3: PrintCode();
 				system("pause");
-				system("cls");
+				system("cls");//按格式打印编码并保存 
 				goto Begin;
 		case 4: fp = fopen("TreePrint.txt","w");
 				PrintTree(T,1);
@@ -399,12 +411,12 @@ int main(void)
 				printf("\n哈夫曼树已保存！\n");
 				system("pause");
 				system("cls");
-				goto Begin;
+				goto Begin;//按树形打印哈夫曼树并保存 
 		case 5: printf("感谢使用哈夫曼树编码系统！\n");
-				 return 0;
+				 return 0;//退出 
 		default: printf("There must be something wrong, please check!\n");
 				 system("pause");
 				 system("cls");
-				 goto Begin;
+				 goto Begin;//输入有误，重新输入 
 	}
 }
