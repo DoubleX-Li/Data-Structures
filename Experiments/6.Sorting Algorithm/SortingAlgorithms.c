@@ -17,9 +17,10 @@ void InitArray(int array[])
 	array[9] = 8;
 }
 
-void Show(int array[], int i)
+void Show(int array[], int n)
 {
-	while(i--)
+	int i;
+	for(i = 0; i < n; i++)
 	{
 		printf("%d ",array[i]);
 	}
@@ -134,7 +135,6 @@ void MergeArray(int a[], int first, int mid, int last, int temp[])
 
 void MergeSort(int a[], int first, int last, int temp[])
 {
-	static int x = 0;
 	if (first < last)
 	{
 		int mid = (first + last) / 2;
@@ -142,8 +142,57 @@ void MergeSort(int a[], int first, int last, int temp[])
 		MergeSort(a, mid+1, last, temp);
 		MergeArray(a, first, mid, last, temp);
 	}
-	printf("No.%2d:          ",++x);
-	Show(temp, 10);
+}
+
+void SiftDown(int array[ ], int s, int m)
+{  	
+	int j; 
+	int r = array[s];
+	for(j = 2 * s; j < m; j = j * 2)
+	{
+		if(j <m && array[j] < array[j+1])
+		{
+			j = j +1;
+		}
+		if(r < array[j])
+		{
+			array[s] = array[j]; 
+			s = j;
+		}
+	}
+	array[s] = r;
+}
+
+void HeapSort(int H[])
+{ 
+	int i; 
+	int j;
+	int r;
+	int array[11];
+	static int x = 0;
+	
+	printf("\nHeapSort\n");
+	for(i = 0; i < 10; i++)
+	{
+		array[i+1] = H[i];
+	}
+	for(i = 10/2; i >= 1; i--)
+	{
+		SiftDown(array, i, 10);
+	} 
+	for(i = 10; i > 2; i--)
+	{
+		r = array[i]; 
+		array[i] = array[1]; 
+		array[1] = r;
+		SiftDown(array, 1, i - 1);
+		printf("No.%2d:          ",++x);
+		for(j = 1; j < 11; j++)
+		{
+			printf("%d ",array[j]);
+		}
+		printf("\n");
+	}
 }
 
 int main()
@@ -151,6 +200,7 @@ int main()
 	int array[10];
 	int temp[10] = {0};
 	
+	system("color F0");
 	InitArray(array);
 	printf("Origin:        ");
 	Show(array,10);
@@ -166,8 +216,12 @@ int main()
 	QuickSort(array, 0, 9);
 	
 	InitArray(array);
-	printf("\nMergeSort\n");
+	printf("\nMergeSort       ");
 	MergeSort(array, 0 , 9, temp);
+	Show(temp, 10);
+	
+	InitArray(array);
+	HeapSort(array);
 
 	return 0;
 }
